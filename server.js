@@ -1,17 +1,14 @@
-var express    = require('express');        // call express
-var app        = express();                 // define our app using express
+var express    = require('express');       
+var app        = express();                
 var bodyParser = require('body-parser');
 
-
-// configure app to use bodyParser()
-// this will let us get the data from a POST
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-app.use(express.json());       // to support JSON-encoded bodies
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }))
 
-var port = 3000;        // set our port
+var port = 3000;        
 
 // ROUTES FOR OUR API
 // =============================================================================
@@ -19,24 +16,25 @@ var port = 3000;        // set our port
 var router = express.Router();           
 var alive_router = express.Router();           
 
-router.get('/', function(req, res) {
-    res.json({ message: 'hooray! welcome to our api!' });   
-});
-
+// A simple  route like this can be used by load balancers 
 alive_router.get('/', function(req, res) {
     res.sendStatus(200);
 });
 
+router.get('/', function(req, res) {
+    res.json({ message: 'hooray! welcome to our api!' });   
+});
 
+// This route catches POST to <server ip>:3000/api/sms_receiver
 router.post('/sms_receiver', function(req, res) {
 
+    // Here we are just printing the request as a placeholder 
     console.log(req.body)
 
 });
 
 
 // REGISTER OUR ROUTES -------------------------------
-// all of our routes will be prefixed with /api
 app.use('/api', router);
 app.use('/', alive_router);
 
